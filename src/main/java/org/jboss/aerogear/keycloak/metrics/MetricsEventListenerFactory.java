@@ -10,7 +10,8 @@ public class MetricsEventListenerFactory implements EventListenerProviderFactory
 
     @Override
     public EventListenerProvider create(KeycloakSession session) {
-        return new MetricsEventListener(session.realms());
+        return new MetricsEventListener(session);
+        // return new MetricsEventListener(session.realm());
     }
 
     @Override

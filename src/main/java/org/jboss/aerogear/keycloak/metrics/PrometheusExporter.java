@@ -2,6 +2,7 @@ package org.jboss.aerogear.keycloak.metrics;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
+import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.exporter.PushGateway;
 import io.prometheus.client.exporter.common.TextFormat;
@@ -63,6 +64,8 @@ public final class PrometheusExporter {
     final Counter responseErrors;
     final Histogram requestDuration;
     final PushGateway PUSH_GATEWAY;
+    final Gauge totalOnlineSessions;
+    final Gauge totalOfflineSessions;
 
     private PrometheusExporter() {
         // The metrics collector needs to be a singleton because requiring a
@@ -93,6 +96,17 @@ public final class PrometheusExporter {
             .name("keycloak_failed_login_attempts")
             .help("Total failed login attempts")
             .labelNames("realm", "provider", "error", "client_id")
+            .register();
+
+        totalOnlineSessions = Gauge.build()
+            .name("keycloak_online_sessions")
+            .help("Total online sessions")
+            .labelNames("realm", "client_id")
+            .register();
+        totalOfflineSessions = Gauge.build()
+            .name("keycloak_offline_sessions")
+            .help("Total offline sessions")
+            .labelNames("realm", "client_id")
             .register();
 
         // package private on purpose
@@ -265,6 +279,23 @@ public final class PrometheusExporter {
         pushAsync();
     }
 
+    /**
+     * Set sessions number
+     *
+     * @param event LoginError event
+     */
+    public void recordSessions(final String realmId, Map<String,Long> onlineSessions, Map<String,Long> offlineSessions) {
+
+        onlineSessions.forEach((clientId, count) -> {
+            totalOnlineSessions.labels(nullToEmpty(realmId), nullToEmpty(clientId)).set(count);
+        });
+
+        offlineSessions.forEach((clientId, count) -> {
+            totalOfflineSessions.labels(nullToEmpty(realmId), nullToEmpty(clientId)).set(count);
+        });
+        pushAsync();
+    }
+    
     /**
      * Increase the number of currently logged in users
      *

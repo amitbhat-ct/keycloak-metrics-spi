@@ -195,6 +195,23 @@ This counter counts every login performed by a non-admin user. It also distingui
 keycloak_logins{realm="test",provider="keycloak",client_id="account"} 3.0
 keycloak_logins{realm="test",provider="github",client_id="application1"} 2.0
 ```
+##### keycloak_online_sessions
+This gauge records the number of online sessions.
+
+```c
+# HELP keycloak_online_sessions Total online sessions
+# TYPE keycloak_online_sessions gauge
+keycloak_online_sessions{realm="test",client_id="application1",} 1.0
+```
+
+##### keycloak_offline_sessions
+This gauge records the number of offline sessions.
+
+```c
+# HELP keycloak_offline_sessions Total offline sessions
+# TYPE keycloak_offline_sessions gauge
+keycloak_offline_sessions{realm="test",client_id="application1",} 1.0
+```
 
 ##### keycloak_failed_login_attempts
 This counter counts every login performed by a non-admin user that fails, being the error described by the label **error**. It also distinguishes logins by the identity provider used by means of the label **provider** and by client with the label **client_id**.
