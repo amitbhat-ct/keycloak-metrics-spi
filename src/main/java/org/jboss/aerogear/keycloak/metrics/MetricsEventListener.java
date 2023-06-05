@@ -107,10 +107,10 @@ private void setSessions(RealmModel realm) {
     
 
     session.sessions().getActiveClientSessionStats(realm,false).forEach((id, count) -> {
-        System.output.print("id" + id);
-        System.output.print("count" + count);
+        System.out.print("id" + id);
+        System.out.print("count" + count);
         Long activeUsercount= session.sessions().getActiveUserSessions(realm,realm.getClientById(id));
-        System.output.print("activeUsercount" + activeUsercount);
+        System.out.print("activeUsercount" + activeUsercount);
 
         onlineSessions.put(realm.getClientById(id).getClientId(), count);
 
