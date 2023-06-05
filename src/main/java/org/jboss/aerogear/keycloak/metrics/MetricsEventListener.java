@@ -79,22 +79,53 @@ public class MetricsEventListener implements EventListenerProvider {
         setSessions(session.realms().getRealm(event.getRealmId()));
     }
 
-   private void setSessions(RealmModel realm) {
+//    private void setSessions(RealmModel realm) {
 
-        Map<String,Long> onlineSessions = new HashMap<String,Long>();
-        session.sessions().getActiveClientSessionStats(realm,false).forEach((id, count) -> 
-            onlineSessions.put(realm.getClientById(id).getClientId(), count)
-        );
+//         Map<String,Long> onlineSessions = new HashMap<String,Long>();
+//         session.sessions().getActiveClientSessionStats(realm,false).forEach((id, count) -> 
+//             onlineSessions.put(realm.getClientById(id).getClientId(), count)
+//         );
 
-        Map<String,Long> offlineSessions = new HashMap<String,Long>(); 
-        session.sessions().getActiveClientSessionStats(realm,true).forEach((id, count) -> 
-            offlineSessions.put(realm.getClientById(id).getClientId(), count)
-        );
+//         Map<String,Long> offlineSessions = new HashMap<String,Long>(); 
+//         session.sessions().getActiveClientSessionStats(realm,true).forEach((id, count) -> 
+//             offlineSessions.put(realm.getClientById(id).getClientId(), count)
+//         );
 
-        PrometheusExporter.instance().recordSessions(getRealmName(realm.getId()), onlineSessions, offlineSessions);
-    }
+//         PrometheusExporter.instance().recordSessions(getRealmName(realm.getId()), onlineSessions, offlineSessions);
+//     }
 
-    /**
+private void setSessions(RealmModel realm) {
+
+    Map<String,Long> onlineSessions = new HashMap<String,Long>();
+    Map<String,Long> onlineUserSessions = new HashMap<String,Long>();
+
+    // session.sessions().getActiveClientSessionStats(realm,false).forEach((id, count) -> 
+      
+    //     onlineSessions.put(realm.getClientById(id).getClientId(), count)
+    // );
+
+    
+
+    session.sessions().getActiveClientSessionStats(realm,false).forEach((id, count) -> {
+        Sytem.output.print("id" + id);
+        Sytem.output.print("count" + count);
+        Long activeUsercount= session.sessions().getActiveUserSessions(realm,realm.getClientById(id));
+        Sytem.output.print("activeUsercount" + activeUsercount);
+
+        onlineSessions.put(realm.getClientById(id).getClientId(), count);
+
+    });
+    
+    Map<String,Long> offlineSessions = new HashMap<String,Long>(); 
+    session.sessions().getActiveClientSessionStats(realm,true).forEach((id, count) -> 
+        offlineSessions.put(realm.getClientById(id).getClientId(), count)
+    );
+
+    PrometheusExporter.instance().recordSessions(getRealmName(realm.getId()), onlineSessions, offlineSessions);
+}
+
+
+            /**
      * Retrieve the real realm name in the event by id from the RealmProvider.
      *
      * @param realmId Id of Realm

@@ -66,6 +66,7 @@ public final class PrometheusExporter {
     final PushGateway PUSH_GATEWAY;
     final Gauge totalOnlineSessions;
     final Gauge totalOfflineSessions;
+    final Gauge activeUserSessions;
 
     private PrometheusExporter() {
         // The metrics collector needs to be a singleton because requiring a
@@ -108,7 +109,11 @@ public final class PrometheusExporter {
             .help("Total offline sessions")
             .labelNames("realm", "client_id")
             .register();
-
+        activeUserSessions = Gauge.build()
+            .name("keycloak_active_user_sessions")
+            .help("Total Active User sessions")
+            .labelNames("realm", "client_id")
+            .register();
         // package private on purpose
         totalRegistrations = Counter.build()
             .name("keycloak_registrations")
@@ -296,6 +301,22 @@ public final class PrometheusExporter {
         pushAsync();
     }
     
+
+    /**
+     * Set Active User sessions number
+     *
+     * @param event LoginError event
+     */
+    // public void recordActiveUserSessions(final String realmId, Map<String,Long> onlineSessions) {
+
+    //     onlineSessions.forEach((clientId, count) -> {
+    //         activeUserSessions.labels(nullToEmpty(realmId), nullToEmpty(clientId)).set(count);
+    //     });
+
+    //     pushAsync();
+    // }
+
+
     /**
      * Increase the number of currently logged in users
      *
@@ -309,6 +330,7 @@ public final class PrometheusExporter {
         totalLogins.labels(nullToEmpty(getRealmName(event.getRealmId(), realmProvider)), provider, nullToEmpty(event.getClientId())).inc();
         pushAsync();
     }
+
 
     /**
      * Increase the number registered users
