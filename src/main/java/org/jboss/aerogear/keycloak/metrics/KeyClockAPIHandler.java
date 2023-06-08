@@ -18,7 +18,7 @@ public class KeyClockAPIHandler{
    
 
     // private static final String URL_KEYCLOAK= "https://bpa-nfr-v1.chainthat.net/auth";
-	private static final String URL_KEYCLOAK= "http://localhost/auth";
+	private static final String URL_KEYCLOAK= "http://localhost:8080/auth";
 
 
 	private static final String POST_URL = "/admin/realms/{{realm}}/clients/{{clientIdServiceAccount}}/session-count";
