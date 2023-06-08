@@ -307,14 +307,24 @@ public final class PrometheusExporter {
      *
      * @param event LoginError event
      */
-    // public void recordActiveUserSessions(final String realmId, Map<String,Long> onlineSessions) {
+    public void recordActiveUserSessions() {
+    
+    String clientId = "f0a23ab5-e222-4569-bc47-93400f317e75";    
+    String realm = "onepatch"; 
+    String count=null;
+    try {
+        count = KeyClockAPIHandler.fetchActiveUserCount();
+    } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
+    double dcount = Double.valueOf(count).doubleValue();
+        
+    activeUserSessions.labels(realm,clientId).set(dcount);
+       
 
-    //     onlineSessions.forEach((clientId, count) -> {
-    //         activeUserSessions.labels(nullToEmpty(realmId), nullToEmpty(clientId)).set(count);
-    //     });
-
-    //     pushAsync();
-    // }
+        // pushAsync();
+    }
 
 
     /**

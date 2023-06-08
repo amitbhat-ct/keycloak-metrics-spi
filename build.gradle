@@ -34,6 +34,7 @@ dependencies {
     implementation group: 'org.keycloak', name: 'keycloak-server-spi', version: keycloakVersion
     implementation group: 'org.keycloak', name: 'keycloak-services', version: keycloakVersion
     implementation group: 'org.jboss.spec.javax.ws.rs', name: 'jboss-jaxrs-api_2.0_spec', version: '1.0.0.Final'
+    implementation 'com.google.code.gson:gson:2.3.1'
     bundleLib group: 'io.prometheus', name: 'simpleclient_common', version: prometheusVersion
     bundleLib group: 'io.prometheus', name: 'simpleclient_hotspot', version: prometheusVersion
     bundleLib group: 'io.prometheus', name: 'simpleclient_pushgateway', version: prometheusVersion
